@@ -56,8 +56,10 @@ export default class ContactAPI extends Component {
         <Title>Contact the API</Title>
         <Columns>
           <div>
-            <button onClick={this.handleGetJwt}>Load JWT</button>
-            <button onClick={this.handleRequest}>GET {this.state.route}</button>
+            <div className="btnGroup">
+              <button onClick={this.handleGetJwt}>Load JWT</button>
+              <button onClick={this.handleRequest}>GET {this.state.route}</button>
+            </div>
             <br/>
             <br/>
             <textarea

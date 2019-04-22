@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Deck, Slide, Image, Title, Text, Subtitle, List, Footer, Browser } from '@sambego/diorama';
+import { Deck, Slide, Image, Title, Text, Subtitle, List, Footer } from '@sambego/diorama';
 
 import CodeSlide from "./components/CodeSlide";
-import HackedSlide from "./components/HackedSlide";
+import SectionSlide from "./components/SectionSlide";
 
 import TalkTitle from "./slides/TalkTitle";
 import About from "./slides/About";
@@ -10,10 +10,13 @@ import OAuth from "./slides/OAuth";
 import OAuthGrant from "./slides/OAuthGrant";
 import JWT from "./slides/JWT";
 import JwtAnatomy from "./slides/JwtAnatomy";
+import JwtEditor from "./slides/JWTEditor";
+import BruteForce from "./slides/BruteForce";
 import Login from "./slides/Login";
 import Callback from "./slides/Callback";
 import ContactAPI from "./slides/ContactAPI";
 import ThankYou from "./slides/ThankYou";
+import Pitfall from "./slides/Pitfall";
 
 import ImgAuthCode1 from "./img/oauth-authcode-1.svg";
 import ImgAuthCode2 from "./img/oauth-authcode-2.svg";
@@ -38,6 +41,11 @@ import ImgAuthServer2 from "./img/auth-server-2.svg";
 import ImgAuthServer3 from "./img/auth-server-3.svg";
 import ImgAuthServer4 from "./img/auth-server-4.svg";
 import ImgAuthHeader from "./img/authheader.png";
+import ImgPitfall1 from "./img/signature.jpg";
+import ImgPitfall2 from "./img/none.jpg";
+import ImgPitfall3 from "./img/weak.jpg";
+import ImgPitfall4 from "./img/confused.jpg";
+import ImgPitfall5 from "./img/storage.jpg";
 
 import './App.css';
 
@@ -46,10 +54,13 @@ class App extends Component {
     const footer = <Footer left="@joel__lord" right="&nbsp;" />
 
     return (
-      <Deck footer={footer}>
+      <Deck footer={footer} swipeToChange={false}>
         <TalkTitle />
         <About />
         <OAuth />
+
+        <SectionSlide text="Authorization Code Grant" background="#77adff" color="#fff" />
+
         <OAuthGrant flow="Authorization Code" image={ImgAuthCode1} />
         <OAuthGrant flow="Authorization Code" image={ImgAuthCode2} />
         <OAuthGrant flow="Authorization Code" image={ImgAuthCode3} />
@@ -59,6 +70,9 @@ class App extends Component {
         <OAuthGrant flow="Authorization Code" image={ImgAuthCode7} />
         <OAuthGrant flow="Authorization Code" image={ImgAuthCode8} />
         <OAuthGrant flow="Authorization Code" image={ImgAuthCode9} />
+
+        <SectionSlide text="Implicit Grant" background="#77adff" color="#fff" />
+
         <OAuthGrant flow="Implicit Flow" image={ImgImplicit1} />
         <OAuthGrant flow="Implicit Flow" image={ImgImplicit2} />
         <OAuthGrant flow="Implicit Flow" image={ImgImplicit3} />
@@ -69,7 +83,19 @@ class App extends Component {
         <OAuthGrant flow="Implicit Flow" image={ImgImplicit8} />
         <OAuthGrant flow="Implicit Flow" image={ImgImplicit9} />
 
+        <Slide>
+          <Title>Tokens</Title>
+          <List>
+            <li>WS-*</li>
+            <li>SAML</li>
+            <li>Custom stuff</li>
+            <li>JWT</li>
+          </List>
+        </Slide>
+
         <JWT />
+
+        <SectionSlide text="Anatomy of a JWT" background="#77adff" color="#fff" />
 
         <JwtAnatomy>A simple JWT</JwtAnatomy>
         <JwtAnatomy highlight="all">Three parts separated by "."</JwtAnatomy>
@@ -96,10 +122,12 @@ class App extends Component {
         <JwtAnatomy highlight="signature" partial>Signature</JwtAnatomy>
         <JwtAnatomy highlight="signature" partial code>
           hmacsha256(<br/>
-          &nbsp;&nbsp;header + signature,<br/>
+          &nbsp;&nbsp;header + payload,<br/>
           &nbsp;&nbsp;SECRET_KEY<br/>
           )
         </JwtAnatomy>
+
+        <SectionSlide text="Using JWTs to Secure Apps" background="#77adff" color="#fff" />
 
         <Slide>
           <Title>Securing Applications</Title>
@@ -209,8 +237,8 @@ app.get("/admindata", (req, res) => {
   payload = JSON.parse(Buffer.from(payload, "base64"));
 });
           `}
-      </CodeSlide>
-      <CodeSlide>
+        </CodeSlide>
+        <CodeSlide>
         {`
 app.get("/admindata", (req, res) => {
   //Check for an Authorization header
@@ -227,23 +255,28 @@ app.get("/admindata", (req, res) => {
   }
 });
           `}
-      </CodeSlide>
+        </CodeSlide>
 
-        <Login authServer="http://localhost:8080" />
+        <SectionSlide text="Demo Time!" background="#77adff" color="#fff" />
+
+        <Login title="" authServer="http://localhost:8080" />
 
         <Callback/>
 
         <ContactAPI />
 
-        <Slide>
-          <Browser url={`https://jwt.io`} />
-        </Slide>
+        <JwtEditor/>
 
         <ContactAPI />
 
+        <Pitfall img={ImgPitfall1} number="1" title="No Signature Check" />
+
         <Slide>
-          <Subtitle>Pitfall #1</Subtitle>
-          <Text>No signature check</Text>
+          <Title>Signature Checks</Title>
+          <List>
+            <li>Prevents Tampering</li>
+            <li>Always check, don't rely on JWT presence</li>
+          </List>
         </Slide>
 
         <CodeSlide title="On the API">
@@ -251,10 +284,38 @@ app.get("/admindata", (req, res) => {
 // Validate authenticity
 const jwtParts = jwt.split(".");
 const data = jwtParts[0] + "." + jwtParts[1];
+          `}
+        </CodeSlide>
+
+        <CodeSlide title="On the API">
+        {`
+// Validate authenticity
+// ...
+switch(jwtParts[0].alg) {
+  case "HS256":
+  //...
+}
+          `}
+        </CodeSlide>
+
+        <CodeSlide title="On the API">
+          {`
+// Validate authenticity
+// ...
+// Generate a signature
 signature = crypto
   .createHmac("sha256", "abcd")
   .update(data)
   .digest("base64");
+          `}
+        </CodeSlide>
+
+        <CodeSlide title="On the API">
+        {`
+// Validate authenticity
+// Generate a signature
+// ...
+// Compare with token
 if (signature !== jwtParts[2]) {
   res.status(401).send("Invalid signature");
   return;
@@ -264,19 +325,35 @@ if (signature !== jwtParts[2]) {
 
         <ContactAPI url="/adminwithsig" />
 
-        <Slide>
-          <Browser url="https://codepen.io/joel__lord/pen/ROyjdy?editors=1011" />
-        </Slide>
+        <JwtEditor />
+
+        <ContactAPI url="/adminsigcheck" />
+
+        <Pitfall img={ImgPitfall2} number="2" title="The alg: none Attack" />
 
         <Slide>
-          <Browser url={`https://jwt.io`} />
+          <Subtitle>Alg:None</Subtitle>
+          <List>
+            <li>Part of the standard</li>
+            <li>If you don't accept it, check for it</li>
+          </List>
         </Slide>
+
+        <BruteForce/>
+
+        <JwtEditor/>
 
         <ContactAPI url="/adminwithsig" />
 
+        <Pitfall img={ImgPitfall3} number="3" title="Weak Secret Key" />
+
         <Slide>
-          <Subtitle>Pitfall #2</Subtitle>
-          <Text>Weak Secret Keys</Text>
+          <Title>Signatures</Title>
+          <List>
+            <li>Keep It Secret</li>
+            <li>Don't use HMAC</li>
+            <li>Use strong keys if you do (64 chars, [a-zA-Z0-9+_-])</li>
+          </List>
         </Slide>
 
         <CodeSlide title="Longer secrets">
@@ -289,24 +366,21 @@ let token = jwt.sign({
           `}
         </CodeSlide>
 
-        <Slide>
-          <Title>Signatures</Title>
-          <List>
-            <li>They prevent tampering</li>
-            <li>Don't use HMAC</li>
-            <li>Use strong keys if you do (64 chars, [a-zA-Z0-9+_-\])</li>
-          </List>
-        </Slide>
-
-        <Login authServer="http://localhost:8181" />
+        <Login title="New Secure Server Login" authServer="http://localhost:8181" />
 
         <Callback />
 
         <ContactAPI url="/adminwithsig" />
 
+        <Pitfall img={ImgPitfall4} number="4" title="Confused Deputy Problem" />
+
         <Slide>
-          <Subtitle>Pifall #3</Subtitle>
-          <Text>Confused Deputy Problem</Text>
+          <Title>Extra Claims</Title>
+          <List>
+            <li>iss</li>
+            <li>aud</li>
+            <li>exp</li>
+          </List>
         </Slide>
 
         <CodeSlide title="Confused Deputy">
@@ -323,19 +397,7 @@ if (payload.aud !== "my-simple-api") {
           `}
         </CodeSlide>
 
-        <Slide>
-          <Title>Extra Claims</Title>
-          <List>
-            <li>iss</li>
-            <li>aud</li>
-            <li>exp</li>
-          </List>
-        </Slide>
-
-        <HackedSlide>
-          <Subtitle>Pitfall #4</Subtitle>
-          <Text>Storing your JWTs and impersonation</Text>
-        </HackedSlide>
+        <Pitfall img={ImgPitfall5} number="5" title="Storing your JWTs and impersonation" />
 
         <Slide>
           <Title>DON'T STORE YOUR JWTs</Title>
@@ -349,9 +411,9 @@ if (payload.aud !== "my-simple-api") {
         <Slide>
           <Title>Other attack Vectors</Title>
           <List>
-            <li>JWT Headers (alg:none)</li>
+            <li>Expiry, One-Time Usage, Revocation</li>
             <li>Elliptic Curve Attack</li>
-            <li></li>
+            <li>This is just the JWT!</li>
           </List>
         </Slide>
 
@@ -367,6 +429,11 @@ if (payload.aud !== "my-simple-api") {
         <Slide>
           <Title>Resources</Title>
           <Text>Here are some resources</Text>
+          <List>
+            <li>Jwt.io</li>
+            <li>Codepen</li>
+            <li></li>
+          </List>
         </Slide>
 
         <ThankYou />

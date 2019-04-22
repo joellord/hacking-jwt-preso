@@ -21,7 +21,7 @@ export default class Login extends Component {
   render() {
     return (
       <Slide>
-        <Title>Demo!</Title>
+        <Title>{this.props.title}</Title>
         <Text>
           <button type="button" onClick={this.authenticate}>Login</button>
         </Text>

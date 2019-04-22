@@ -31,6 +31,7 @@ button {
   height: 75px;
   min-width: 250px;
   font-size: 1em;
+  margin: 0.25rem;
 }
 
 .jwt {
@@ -75,4 +76,8 @@ button {
   background: transparent url("img/auth0-logo-forlightbg.png") 0 0 no-repeat;
   background-size: 10rem;
   box-shadow: none;
+}
+
+btnGroup {
+  flex-direction: row;
 }
