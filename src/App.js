@@ -1,26 +1,377 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { Deck, Slide, Image, Title, Text, Subtitle, List, Footer, Browser } from '@sambego/diorama';
+
+import CodeSlide from "./components/CodeSlide";
+import HackedSlide from "./components/HackedSlide";
+
+import TalkTitle from "./slides/TalkTitle";
+import About from "./slides/About";
+import OAuth from "./slides/OAuth";
+import OAuthGrant from "./slides/OAuthGrant";
+import JWT from "./slides/JWT";
+import JwtAnatomy from "./slides/JwtAnatomy";
+import Login from "./slides/Login";
+import Callback from "./slides/Callback";
+import ContactAPI from "./slides/ContactAPI";
+import ThankYou from "./slides/ThankYou";
+
+import ImgAuthCode1 from "./img/oauth-authcode-1.svg";
+import ImgAuthCode2 from "./img/oauth-authcode-2.svg";
+import ImgAuthCode3 from "./img/oauth-authcode-3.svg";
+import ImgAuthCode4 from "./img/oauth-authcode-4.svg";
+import ImgAuthCode5 from "./img/oauth-authcode-5.svg";
+import ImgAuthCode6 from "./img/oauth-authcode-6.svg";
+import ImgAuthCode7 from "./img/oauth-authcode-7.svg";
+import ImgAuthCode8 from "./img/oauth-authcode-8.svg";
+import ImgAuthCode9 from "./img/oauth-authcode-9.svg";
+import ImgImplicit1 from "./img/oauth-implicit-1.svg";
+import ImgImplicit2 from "./img/oauth-implicit-2.svg";
+import ImgImplicit3 from "./img/oauth-implicit-3.svg";
+import ImgImplicit4 from "./img/oauth-implicit-4.svg";
+import ImgImplicit5 from "./img/oauth-implicit-5.svg";
+import ImgImplicit6 from "./img/oauth-implicit-6.svg";
+import ImgImplicit7 from "./img/oauth-implicit-7.svg";
+import ImgImplicit8 from "./img/oauth-implicit-8.svg";
+import ImgImplicit9 from "./img/oauth-implicit-9.svg";
+import ImgAuthServer1 from "./img/auth-server-1.svg";
+import ImgAuthServer2 from "./img/auth-server-2.svg";
+import ImgAuthServer3 from "./img/auth-server-3.svg";
+import ImgAuthServer4 from "./img/auth-server-4.svg";
+import ImgAuthHeader from "./img/authheader.png";
+
 import './App.css';
 
 class App extends Component {
   render() {
+    const footer = <Footer left="@joel__lord" right="&nbsp;" />
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Deck footer={footer}>
+        <TalkTitle />
+        <About />
+        <OAuth />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode1} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode2} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode3} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode4} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode5} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode6} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode7} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode8} />
+        <OAuthGrant flow="Authorization Code" image={ImgAuthCode9} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit1} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit2} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit3} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit4} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit5} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit6} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit7} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit8} />
+        <OAuthGrant flow="Implicit Flow" image={ImgImplicit9} />
+
+        <JWT />
+
+        <JwtAnatomy>A simple JWT</JwtAnatomy>
+        <JwtAnatomy highlight="all">Three parts separated by "."</JwtAnatomy>
+        <JwtAnatomy highlight="header">Header</JwtAnatomy>
+        <JwtAnatomy highlight="header" partial>Header</JwtAnatomy>
+        <JwtAnatomy highlight="header" partial>atob(**header**);</JwtAnatomy>
+        <JwtAnatomy highlight="header" partial code>
+            &#123;<br/>
+            &nbsp;&nbsp;"alg": "HS256",<br/>
+            &nbsp;&nbsp;"typ": "JWT"<br/>
+            &#125;
+        </JwtAnatomy>
+        <JwtAnatomy highlight="payload">Payload</JwtAnatomy>
+        <JwtAnatomy highlight="payload" partial>Payload</JwtAnatomy>
+        <JwtAnatomy highlight="payload" partial>atob(**payload**);</JwtAnatomy>
+        <JwtAnatomy highlight="payload" partial code>
+          &#123;<br/>
+          &nbsp;&nbsp;"sub": "1234567890",<br/>
+          &nbsp;&nbsp;"name": "John Doe",<br/>
+          &nbsp;&nbsp;"iat": 1516239022<br/>
+          &#125;
+        </JwtAnatomy>
+        <JwtAnatomy highlight="signature">Signature</JwtAnatomy>
+        <JwtAnatomy highlight="signature" partial>Signature</JwtAnatomy>
+        <JwtAnatomy highlight="signature" partial code>
+          hmacsha256(<br/>
+          &nbsp;&nbsp;header + signature,<br/>
+          &nbsp;&nbsp;SECRET_KEY<br/>
+          )
+        </JwtAnatomy>
+
+        <Slide>
+          <Title>Securing Applications</Title>
+          <Subtitle>Authorization Server</Subtitle>
+        </Slide>
+
+        <OAuthGrant flow="Authorization Server" image={ImgAuthServer1} />
+        <OAuthGrant flow="Authorization Server" image={ImgAuthServer2} />
+        <OAuthGrant flow="Authorization Server" image={ImgAuthServer3} />
+        <OAuthGrant flow="Authorization Server" image={ImgAuthServer4} />
+
+        <CodeSlide>
+          {`
+app.post("/login", function(req, res) {
+  // Validate request
+  if (!req.body.username || !req.body.password) {
+    return res.status(400).send(\`Need username and password\`);
+  }
+});
+          `}
+        </CodeSlide>
+        <CodeSlide>
+          {`
+app.post("/login", function(req, res) {
+  // Validate request
+  // ...
+
+  // Find user in DB
+  var user = users.find(function(u) {
+    return (u.username === req.body.username &&
+      u.password === req.body.password);
+  });
+  if (!user) return res.status(401).send(\`User not found\`);
+});
+          `}
+        </CodeSlide>
+        <CodeSlide>
+          {`
+app.post("/login", function(req, res) {
+  // Validate request
+  // ...
+
+  // Find user in DB
+  // ...
+
+  // Generate a JWT
+  var token = jwt.sign({
+    sub: user.id,
+    username: user.username,
+    admin: false
+  }, "abcd");
+});
+          `}
+        </CodeSlide>
+        <CodeSlide>
+          {`
+app.post("/login", function(req, res) {
+  // Validate request
+  // ...
+
+  // Find user in DB
+  // ...
+
+  // Generate a JWT
+  // ...
+
+  // Redirect the user with a JWT
+  res.redirect(req.body.callback + "#access_token=" + token);
+});
+          `}
+        </CodeSlide>
+
+        <Slide>
+          <Title>Securing Applications</Title>
+          <Subtitle>Front End</Subtitle>
+        </Slide>
+
+        <Slide>
+          <Subtitle>Add Authorization Header</Subtitle>
+          <Image src={ImgAuthHeader} />
+        </Slide>
+
+        <Slide>
+          <Title>Securing Applications</Title>
+          <Subtitle>API</Subtitle>
+        </Slide>
+
+        <CodeSlide>
+          {`
+app.get("/admindata", (req, res) => {
+  //Check for an Authorization header
+  if (!req.headers.authorization) {
+    res.status(401).send("No authorization header found");
+  }
+});
+          `}
+        </CodeSlide>
+        <CodeSlide>
+        {`
+app.get("/admindata", (req, res) => {
+  //Check for an Authorization header
+  //...
+
+  //Get the JWT (Authorization: Bearer ..token..
+  const jwt = req.headers.authorization.split(" ")[1];
+  const payload = jwt.split(".")[1];
+  payload = JSON.parse(Buffer.from(payload, "base64"));
+});
+          `}
+      </CodeSlide>
+      <CodeSlide>
+        {`
+app.get("/admindata", (req, res) => {
+  //Check for an Authorization header
+  //...
+
+  //Get the JWT (Authorization: Bearer ..token..
+  //...
+
+  //Check permissions
+  if (payload.admin) {
+    res.status(200).send("You have admin rights");
+  } else {
+    res.status(401).send("Can't show you this");
+  }
+});
+          `}
+      </CodeSlide>
+
+        <Login authServer="http://localhost:8080" />
+
+        <Callback/>
+
+        <ContactAPI />
+
+        <Slide>
+          <Browser url={`https://jwt.io`} />
+        </Slide>
+
+        <ContactAPI />
+
+        <Slide>
+          <Subtitle>Pitfall #1</Subtitle>
+          <Text>No signature check</Text>
+        </Slide>
+
+        <CodeSlide title="On the API">
+          {`
+// Validate authenticity
+const jwtParts = jwt.split(".");
+const data = jwtParts[0] + "." + jwtParts[1];
+signature = crypto
+  .createHmac("sha256", "abcd")
+  .update(data)
+  .digest("base64");
+if (signature !== jwtParts[2]) {
+  res.status(401).send("Invalid signature");
+  return;
+}
+          `}
+        </CodeSlide>
+
+        <ContactAPI url="/adminwithsig" />
+
+        <Slide>
+          <Browser url="https://codepen.io/joel__lord/pen/ROyjdy?editors=1011" />
+        </Slide>
+
+        <Slide>
+          <Browser url={`https://jwt.io`} />
+        </Slide>
+
+        <ContactAPI url="/adminwithsig" />
+
+        <Slide>
+          <Subtitle>Pitfall #2</Subtitle>
+          <Text>Weak Secret Keys</Text>
+        </Slide>
+
+        <CodeSlide title="Longer secrets">
+          {`
+let token = jwt.sign({
+  sub: user.id,
+  admin: false,
+  username: user.username
+}, "This-Is_a_V3ry/LongKey andIs+Much!Better");
+          `}
+        </CodeSlide>
+
+        <Slide>
+          <Title>Signatures</Title>
+          <List>
+            <li>They prevent tampering</li>
+            <li>Don't use HMAC</li>
+            <li>Use strong keys if you do (64 chars, [a-zA-Z0-9+_-\])</li>
+          </List>
+        </Slide>
+
+        <Login authServer="http://localhost:8181" />
+
+        <Callback />
+
+        <ContactAPI url="/adminwithsig" />
+
+        <Slide>
+          <Subtitle>Pifall #3</Subtitle>
+          <Text>Confused Deputy Problem</Text>
+        </Slide>
+
+        <CodeSlide title="Confused Deputy">
+          {`
+if (payload.iss !== "ugly-little-auth-server") {
+  res.status(401).send("I don't trust this server");
+  return;
+}
+
+if (payload.aud !== "my-simple-api") {
+  res.status(401).send("This token is not meant for this API");
+  return;
+}
+          `}
+        </CodeSlide>
+
+        <Slide>
+          <Title>Extra Claims</Title>
+          <List>
+            <li>iss</li>
+            <li>aud</li>
+            <li>exp</li>
+          </List>
+        </Slide>
+
+        <HackedSlide>
+          <Subtitle>Pitfall #4</Subtitle>
+          <Text>Storing your JWTs and impersonation</Text>
+        </HackedSlide>
+
+        <Slide>
+          <Title>DON'T STORE YOUR JWTs</Title>
+          <List>
+            <li>No storage is safe</li>
+            <li>localStorage is the best but check your node_modules folder</li>
+            <li>Keep them in memory</li>
+          </List>
+        </Slide>
+
+        <Slide>
+          <Title>Other attack Vectors</Title>
+          <List>
+            <li>JWT Headers (alg:none)</li>
+            <li>Elliptic Curve Attack</li>
+            <li></li>
+          </List>
+        </Slide>
+
+        <Slide>
+          <Title>Some Best Practices</Title>
+          <List>
+            <li>Use proven JWT libraries on Auth server and API</li>
+            <li>Use RS256 instead of SHA256 for signature</li>
+            <li>Use trusted third party services</li>
+          </List>
+        </Slide>
+
+        <Slide>
+          <Title>Resources</Title>
+          <Text>Here are some resources</Text>
+        </Slide>
+
+        <ThankYou />
+
+      </Deck>
     );
   }
 }

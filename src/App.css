@@ -23,6 +23,28 @@
   color: #61dafb;
 }
 
+button {
+  border: 1px solid darkcyan;
+  background: lightcyan;
+  box-shadow: none;
+  border-radius: 5px;
+  height: 75px;
+  min-width: 250px;
+  font-size: 1em;
+}
+
+.jwt {
+  overflow-wrap: break-word;
+  word-break: break-all;
+  text-align: left;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+.align-left {
+  text-align: left;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -30,4 +52,27 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.diorama-footer-left {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  padding: 0 0 0 3rem;
+  background: transparent url("img/twitter.png") 0 0.5rem no-repeat;
+  background-size: 2rem;
+  box-shadow: none;
+  color: #1b2b34;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.diorama-footer-right {
+  position: fixed;
+  bottom: 2rem;
+  right: 0rem;
+  padding: 1rem 0rem 0rem 12rem;
+  background: transparent url("img/auth0-logo-forlightbg.png") 0 0 no-repeat;
+  background-size: 10rem;
+  box-shadow: none;
 }
